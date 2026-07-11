@@ -1,0 +1,97 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: CMS Blue Button 2.0
+providerId: cms-blue-button
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Blue Button
+- CARIN
+- Medicare
+- FHIR
+- Claims Data
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Blue Button 2.0 spend. The API is a free U.S. government
+  service operated by the Centers for Medicare & Medicaid Services - there is
+  no invoice from CMS at any usage level, in sandbox or production. The real
+  costs of consuming Blue Button 2.0 sit on the consumer side - engineering
+  time to pass CMS production approval (privacy policy, terms of service,
+  demo), infrastructure to run the OAuth consent flow and store
+  beneficiary-consented FHIR data, and the compliance overhead of handling
+  Medicare claims data (breach notification, dormant-account, and third-party
+  vendor obligations from the CMS terms).
+notes: >-
+  There are no vendor charge categories to track. Model internal costs
+  instead - per-beneficiary storage and sync compute grow linearly with
+  authorized users, and token lifecycles (1-hour access tokens, one-time-use
+  refresh tokens) shape polling architecture and compute cost.
+sources:
+- https://bluebutton.cms.gov/
+- https://bluebutton.cms.gov/production-access/
+- https://bluebutton.cms.gov/terms/
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Centers for Medicare & Medicaid Services
+serviceCategory: Healthcare Data
+billingModel:
+  pricingCategory: Free
+  billingFrequency: None
+  billingCurrency: USD
+  chargeCategories: []
+focusColumns:
+  ServiceName: Blue Button 2.0
+  ServiceCategory: Healthcare Data
+  ProviderName: Centers for Medicare & Medicaid Services
+  PublisherName: Centers for Medicare & Medicaid Services
+  InvoiceIssuerName: None (free government service)
+  BillingCurrency: USD
+  ChargeCategory: None
+  PricingCategory: Free
+meters:
+- name: authorized_beneficiaries
+  description: Number of Medicare beneficiaries who have authorized the application; drives consumer-side storage and sync compute, not a CMS charge.
+  unit: users
+  aggregation: sum
+  dimensions:
+  - application
+- name: fhir_requests
+  description: FHIR API requests to ExplanationOfBenefit, Patient, and Coverage endpoints; free, but drives consumer-side compute and polling architecture.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - application
+  - resource
+- name: token_refreshes
+  description: OAuth token grants and refreshes; one-hour access tokens and one-time-use refresh tokens shape sync scheduling.
+  unit: tokens
+  aggregation: sum
+  dimensions:
+  - application
+- name: compliance_overhead
+  description: Internal cost of meeting CMS terms - privacy policy upkeep, breach notification readiness, dormant-account handling, vendor reviews.
+  unit: hours
+  aggregation: sum
+  dimensions:
+  - application
+principles:
+- name: Visibility
+  description: Track authorized-beneficiary counts and per-resource request volume even though CMS never bills; they are the drivers of your own infrastructure cost.
+- name: Allocation
+  description: Attribute storage, sync compute, and compliance overhead per product or team consuming Medicare claims data.
+- name: Optimization
+  description: Poll incrementally with _lastUpdated and page with _count to minimize compute; avoid re-pulling full multi-year claim histories.
+- name: Accountability
+  description: Assign an owner for CMS terms-of-service compliance and for the production-approval relationship with the Blue Button team.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

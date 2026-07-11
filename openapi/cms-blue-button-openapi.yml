@@ -1,0 +1,435 @@
+openapi: 3.0.3
+info:
+  title: CMS Blue Button 2.0 API
+  description: >-
+    Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CMS)
+    patient-facing API that lets Medicare beneficiaries share their Parts A, B,
+    and D claims data with applications they authorize. The v2 API is FHIR R4
+    (4.0.1) and conforms to the CARIN Blue Button Implementation Guide (CARIN
+    Consumer Directed Payer Data Exchange, CDPDE). It exposes three FHIR
+    resource types - ExplanationOfBenefit (claims), Patient (demographics),
+    and Coverage (Part A/B/D enrollment) - plus a capability statement and an
+    OpenID Connect userinfo endpoint. Every request is scoped to the single
+    beneficiary who authorized the application through the OAuth 2.0
+    authorization-code flow (PKCE S256 required) on Medicare.gov. The sandbox
+    at sandbox.bluebutton.cms.gov mirrors production with synthetic data for
+    10,000 enrollees.
+  version: '2.0'
+  contact:
+    name: CMS Blue Button 2.0
+    url: https://bluebutton.cms.gov
+  termsOfService: https://bluebutton.cms.gov/terms/
+servers:
+  - url: https://api.bluebutton.cms.gov/v2/fhir
+    description: Production (approved applications only)
+  - url: https://sandbox.bluebutton.cms.gov/v2/fhir
+    description: Sandbox (synthetic Medicare enrollee data, self-serve)
+security:
+  - oauth2:
+      - patient/ExplanationOfBenefit.read
+      - patient/Patient.read
+      - patient/Coverage.read
+tags:
+  - name: ExplanationOfBenefit
+    description: Medicare Parts A, B, and D claims as CARIN Blue Button EOB profiles.
+  - name: Patient
+    description: Beneficiary demographic and administrative data.
+  - name: Coverage
+    description: Medicare coverage resources, one per coverage type.
+  - name: Metadata
+    description: FHIR capability statement.
+  - name: UserInfo
+    description: OpenID Connect userinfo for the authorizing beneficiary.
+paths:
+  /ExplanationOfBenefit:
+    get:
+      operationId: searchExplanationOfBenefit
+      tags:
+        - ExplanationOfBenefit
+      summary: Search a beneficiary's Medicare claims
+      description: >-
+        Returns the authorized beneficiary's Medicare Parts A, B, and D claims
+        as ExplanationOfBenefit resources inside a FHIR Bundle, conforming to
+        the CARIN Blue Button profiles.
+      parameters:
+        - name: patient
+          in: query
+          description: The FHIR logical id of the beneficiary Patient resource.
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: >-
+            Claim type filter - one or more of carrier, pde, dme, hha, hospice,
+            inpatient, outpatient, snf.
+          schema:
+            type: string
+        - name: service-date
+          in: query
+          description: Filter claims by service date range using gt/lt/ge/le prefixes.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/lastUpdated'
+        - name: excludeSAMHSA
+          in: query
+          description: >-
+            When true, excludes claims related to substance abuse and mental
+            health services (SAMHSA).
+          schema:
+            type: string
+            enum: ['true', 'false']
+        - name: includeTaxNumbers
+          in: query
+          description: When true, includes provider tax numbers in the response.
+          schema:
+            type: string
+            enum: ['true', 'false']
+        - $ref: '#/components/parameters/count'
+        - $ref: '#/components/parameters/startIndex'
+      responses:
+        '200':
+          description: A FHIR Bundle of ExplanationOfBenefit resources.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /ExplanationOfBenefit/{id}:
+    get:
+      operationId: readExplanationOfBenefit
+      tags:
+        - ExplanationOfBenefit
+      summary: Read a single claim by id
+      description: Returns a single ExplanationOfBenefit resource by FHIR logical id.
+      parameters:
+        - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          description: An ExplanationOfBenefit resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/ExplanationOfBenefit'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /Patient:
+    get:
+      operationId: searchPatient
+      tags:
+        - Patient
+      summary: Search the authorized beneficiary's Patient resource
+      description: >-
+        Returns the beneficiary's demographic and administrative record as a
+        Patient resource in a FHIR Bundle. Available only if the beneficiary
+        chose to share demographic data during authorization.
+      parameters:
+        - name: _id
+          in: query
+          description: The FHIR logical id of the Patient resource.
+          schema:
+            type: string
+        - name: identifier
+          in: query
+          description: >-
+            Search by business identifier (Medicare Beneficiary Identifier hash
+            system identifiers).
+          schema:
+            type: string
+        - $ref: '#/components/parameters/lastUpdated'
+        - $ref: '#/components/parameters/count'
+        - $ref: '#/components/parameters/startIndex'
+      responses:
+        '200':
+          description: A FHIR Bundle containing the Patient resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Patient/{id}:
+    get:
+      operationId: readPatient
+      tags:
+        - Patient
+      summary: Read the beneficiary's Patient resource by id
+      description: Returns the Patient resource for the authorizing beneficiary.
+      parameters:
+        - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          description: A Patient resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /Coverage:
+    get:
+      operationId: searchCoverage
+      tags:
+        - Coverage
+      summary: Search a beneficiary's Medicare coverage
+      description: >-
+        Returns Coverage resources inside a FHIR Bundle - one Coverage resource
+        per coverage type (Medicare Part A, Part B, Part D).
+      parameters:
+        - name: beneficiary
+          in: query
+          description: The FHIR logical id of the beneficiary Patient resource.
+          schema:
+            type: string
+        - name: _profile
+          in: query
+          description: Filter the response to a specific CARIN Coverage profile.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/lastUpdated'
+        - $ref: '#/components/parameters/count'
+        - $ref: '#/components/parameters/startIndex'
+      responses:
+        '200':
+          description: A FHIR Bundle of Coverage resources.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Coverage/{id}:
+    get:
+      operationId: readCoverage
+      tags:
+        - Coverage
+      summary: Read a single Coverage resource by id
+      description: Returns a single Coverage resource by FHIR logical id.
+      parameters:
+        - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          description: A Coverage resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Coverage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /metadata:
+    get:
+      operationId: getCapabilityStatement
+      tags:
+        - Metadata
+      summary: Retrieve the FHIR capability statement
+      description: >-
+        Returns the server CapabilityStatement (FHIR 4.0.1) describing the
+        supported resources, interactions, and search parameters. Does not
+        require authorization.
+      security: []
+      responses:
+        '200':
+          description: A CapabilityStatement resource.
+          content:
+            application/fhir+json:
+              schema:
+                type: object
+                description: FHIR CapabilityStatement resource.
+  /connect/userinfo:
+    servers:
+      - url: https://api.bluebutton.cms.gov/v2
+        description: Production (userinfo lives outside the /fhir base path)
+      - url: https://sandbox.bluebutton.cms.gov/v2
+        description: Sandbox
+    get:
+      operationId: getUserInfo
+      tags:
+        - UserInfo
+      summary: Retrieve the authorizing user's OpenID Connect profile
+      description: >-
+        Full path is /v2/connect/userinfo (outside the /fhir base). Returns the
+        authorizing beneficiary's user profile (name, family name, email) when
+        the openid and profile scopes were granted.
+      responses:
+        '200':
+          description: OpenID Connect userinfo JSON.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sub:
+                    type: string
+                  name:
+                    type: string
+                  given_name:
+                    type: string
+                  family_name:
+                    type: string
+                  email:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    resourceId:
+      name: id
+      in: path
+      required: true
+      description: The FHIR logical id of the resource.
+      schema:
+        type: string
+    lastUpdated:
+      name: _lastUpdated
+      in: query
+      description: >-
+        Filter by the record's last_updated date using gt/lt prefixes; may be
+        supplied more than once to define a range.
+      schema:
+        type: string
+    count:
+      name: _count
+      in: query
+      description: Number of records per page for pagination.
+      schema:
+        type: integer
+    startIndex:
+      name: startIndex
+      in: query
+      description: Zero-based index of the first record to return for pagination.
+      schema:
+        type: integer
+  responses:
+    Unauthorized:
+      description: Missing, expired, or invalid OAuth 2.0 access token.
+    NotFound:
+      description: No resource exists with the supplied id for this beneficiary.
+  schemas:
+    Bundle:
+      type: object
+      description: A FHIR R4 searchset Bundle wrapping matching resources.
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+              url:
+                type: string
+        entry:
+          type: array
+          items:
+            type: object
+            properties:
+              resource:
+                type: object
+    ExplanationOfBenefit:
+      type: object
+      description: >-
+        FHIR R4 ExplanationOfBenefit conforming to the CARIN Blue Button
+        profiles - one of carrier, pde (Part D drug event), dme, hha, hospice,
+        inpatient, outpatient, or snf claim types.
+      properties:
+        resourceType:
+          type: string
+          enum: [ExplanationOfBenefit]
+        id:
+          type: string
+        type:
+          type: object
+        patient:
+          type: object
+        billablePeriod:
+          type: object
+        insurance:
+          type: array
+          items:
+            type: object
+        item:
+          type: array
+          items:
+            type: object
+        total:
+          type: array
+          items:
+            type: object
+    Patient:
+      type: object
+      description: FHIR R4 Patient resource for the authorizing Medicare beneficiary.
+      properties:
+        resourceType:
+          type: string
+          enum: [Patient]
+        id:
+          type: string
+        identifier:
+          type: array
+          items:
+            type: object
+        name:
+          type: array
+          items:
+            type: object
+        birthDate:
+          type: string
+        address:
+          type: array
+          items:
+            type: object
+    Coverage:
+      type: object
+      description: >-
+        FHIR R4 Coverage resource - one per Medicare coverage type (Part A,
+        Part B, Part D).
+      properties:
+        resourceType:
+          type: string
+          enum: [Coverage]
+        id:
+          type: string
+        status:
+          type: string
+        beneficiary:
+          type: object
+        class:
+          type: array
+          items:
+            type: object
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: >-
+        OAuth 2.0 authorization-code flow with mandatory PKCE (S256 only).
+        Beneficiaries log in with their Medicare.gov credentials and choose
+        whether to share demographic data. Access tokens expire after 1 hour.
+        One-time-use refresh tokens are issued only to approved 13-month and
+        research application types. Sandbox uses
+        https://sandbox.bluebutton.cms.gov/v2/o/authorize/ and
+        https://sandbox.bluebutton.cms.gov/v2/o/token/.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.bluebutton.cms.gov/v2/o/authorize/
+          tokenUrl: https://api.bluebutton.cms.gov/v2/o/token/
+          refreshUrl: https://api.bluebutton.cms.gov/v2/o/token/
+          scopes:
+            patient/Patient.read: Read the beneficiary's Patient demographic resource.
+            patient/ExplanationOfBenefit.read: Read the beneficiary's Medicare claims.
+            patient/Coverage.read: Read the beneficiary's Medicare coverage.
+            openid: OpenID Connect authentication.
+            profile: Access the userinfo profile endpoint.
+            launch/patient: Receive the patient FHIR id in the token response.

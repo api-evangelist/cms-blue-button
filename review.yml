@@ -1,0 +1,96 @@
+aid: cms-blue-button
+name: CMS Blue Button 2.0
+review:
+  question: Does CMS Blue Button 2.0 expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-11'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Blue Button 2.0 is a request/response
+    FHIR R4 REST API over HTTPS - beneficiary-authorized reads of
+    ExplanationOfBenefit, Patient, and Coverage resources plus an OpenID
+    Connect userinfo endpoint. There is no server-push transport (WebSocket,
+    SSE, or webhook subscription) on the public API to model. FHIR
+    Subscription is not implemented; apps detect new claims by polling with
+    the _lastUpdated search parameter.
+findings:
+  summary: |
+    CMS Blue Button 2.0 does not publish a documented public WebSocket API.
+    The API is a FHIR R4 (4.0.1) REST surface conforming to the CARIN Blue
+    Button Implementation Guide, served at
+    https://api.bluebutton.cms.gov/v2/fhir (production) and
+    https://sandbox.bluebutton.cms.gov/v2/fhir (sandbox), authorized per
+    beneficiary via OAuth 2.0 authorization-code flow with mandatory PKCE
+    (S256). All documented interactions are client-initiated HTTPS GETs -
+    resource reads and searches plus the capability statement and the
+    /v2/connect/userinfo endpoint. The live capability statement (fetched
+    2026-07-11, software gov.cms.bfd:bfd-server-war v2.251.0) lists only
+    read and search-type interactions for Coverage, ExplanationOfBenefit,
+    and Patient - no Subscription resource, no messaging, and no ws:// or
+    wss:// endpoint anywhere in the documentation.
+  openSource: |
+    CMS develops Blue Button 2.0 in the open under the CMSgov GitHub
+    organization - the OAuth/web layer (bluebutton-web-server) and the
+    Beneficiary FHIR Data server (beneficiary-fhir-data) are public
+    repositories, alongside sample client applications. The hosted API itself
+    is a government service, free to use, with sandbox self-serve and
+    production access gated on CMS approval of each application.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.bluebutton.cms.gov/v2/fhir
+      documented: true
+      note: FHIR R4 read/search over HTTPS; sandbox mirror at sandbox.bluebutton.cms.gov/v2/fhir.
+    - protocol: OAuth 2.0 / OpenID Connect
+      scheme: https
+      baseURL: https://api.bluebutton.cms.gov/v2/o
+      documented: true
+      note: Authorization-code flow with mandatory PKCE (S256); /v2/o/authorize/ and /v2/o/token/ plus /v2/connect/userinfo.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in the Blue Button 2.0 developer documentation as of the review date.
+    - protocol: Webhook
+      scheme: https
+      documented: false
+      note: No event callbacks or FHIR Subscription support; new-claims detection is done by polling with _lastUpdated.
+  endpointsConfirmedRest:
+    - GET https://api.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit
+    - GET https://api.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit/{id}
+    - GET https://api.bluebutton.cms.gov/v2/fhir/Patient
+    - GET https://api.bluebutton.cms.gov/v2/fhir/Patient/{id}
+    - GET https://api.bluebutton.cms.gov/v2/fhir/Coverage
+    - GET https://api.bluebutton.cms.gov/v2/fhir/Coverage/{id}
+    - GET https://api.bluebutton.cms.gov/v2/fhir/metadata
+    - GET https://api.bluebutton.cms.gov/v2/connect/userinfo
+    - GET https://api.bluebutton.cms.gov/v2/o/authorize/
+    - POST https://api.bluebutton.cms.gov/v2/o/token/
+sources:
+  - url: https://bluebutton.cms.gov/api-documentation/
+    type: Documentation
+    note: Developer documentation hub; v2 is FHIR R4 and CARIN CDPDE (CARIN for Blue Button) conformant.
+  - url: https://bluebutton.cms.gov/api-documentation/calling-the-api/
+    type: Documentation
+    note: FHIR endpoint paths for Patient, Coverage, ExplanationOfBenefit, metadata, and userinfo; sandbox and production base URLs.
+  - url: https://bluebutton.cms.gov/api-documentation/authorization/
+    type: Documentation
+    note: OAuth 2.0 authorization-code flow, mandatory PKCE S256, scopes, 1-hour access tokens, one-time-use refresh tokens.
+  - url: https://sandbox.bluebutton.cms.gov/v2/fhir/metadata
+    type: CapabilityStatement
+    note: Live FHIR 4.0.1 capability statement; only read and search-type interactions on Coverage, ExplanationOfBenefit, Patient.
+  - url: https://bluebutton.cms.gov/production-access/
+    type: Documentation
+    note: Production access is free but approval-gated - privacy policy, terms of service, and a demo to the CMS team.
+  - url: https://github.com/CMSgov/bluebutton-web-server
+    type: SourceCode
+    note: Open-source OAuth/web layer for the Blue Button 2.0 API.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Blue Button 2.0 is a
+    beneficiary-consented, request/response FHIR R4 REST API; the only
+    documented transports are HTTPS REST plus the OAuth 2.0/OIDC
+    authorization endpoints. No AsyncAPI document was created because there
+    is no server-push transport on the API to model.

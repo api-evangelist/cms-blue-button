@@ -1,0 +1,172 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CMS Blue Button 2.0 API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{accessToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ExplanationOfBenefit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Search a beneficiary's Medicare claims", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit?patient={{patientId}}",
+            "params": [
+              { "name": "patient", "value": "{{patientId}}", "type": "query", "description": "FHIR logical id of the beneficiary Patient resource." },
+              { "name": "type", "value": "", "type": "query", "description": "Claim type filter: carrier, pde, dme, hha, hospice, inpatient, outpatient, snf." },
+              { "name": "service-date", "value": "", "type": "query", "description": "Filter by service date with gt/lt/ge/le prefixes." },
+              { "name": "_lastUpdated", "value": "", "type": "query", "description": "Filter by last_updated date with gt/lt prefixes." },
+              { "name": "excludeSAMHSA", "value": "", "type": "query", "description": "Set true to exclude SAMHSA-related claims." },
+              { "name": "_count", "value": "", "type": "query", "description": "Records per page." },
+              { "name": "startIndex", "value": "", "type": "query", "description": "Pagination offset." }
+            ]
+          },
+          "docs": "Returns Medicare Parts A, B, and D claims as CARIN Blue Button ExplanationOfBenefit resources in a FHIR Bundle."
+        },
+        {
+          "info": { "name": "Read a single claim by id", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "FHIR logical id of the ExplanationOfBenefit." }
+            ]
+          },
+          "docs": "Returns a single ExplanationOfBenefit resource."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Patient",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Search the authorized beneficiary's Patient resource", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/Patient?_id={{patientId}}",
+            "params": [
+              { "name": "_id", "value": "{{patientId}}", "type": "query", "description": "FHIR logical id of the Patient resource." },
+              { "name": "_lastUpdated", "value": "", "type": "query", "description": "Filter by last_updated date with gt/lt prefixes." }
+            ]
+          },
+          "docs": "Returns the beneficiary's demographic record as a Patient resource in a FHIR Bundle. Available only if the beneficiary shared demographic data during authorization."
+        },
+        {
+          "info": { "name": "Read the beneficiary's Patient resource by id", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/Patient/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "FHIR logical id of the Patient resource." }
+            ]
+          },
+          "docs": "Returns the Patient resource for the authorizing beneficiary."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Coverage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Search a beneficiary's Medicare coverage", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/Coverage?beneficiary={{patientId}}",
+            "params": [
+              { "name": "beneficiary", "value": "{{patientId}}", "type": "query", "description": "FHIR logical id of the beneficiary Patient resource." },
+              { "name": "_lastUpdated", "value": "", "type": "query", "description": "Filter by last_updated date with gt/lt prefixes." },
+              { "name": "_count", "value": "", "type": "query", "description": "Records per page." }
+            ]
+          },
+          "docs": "Returns Coverage resources in a FHIR Bundle - one per Medicare coverage type (Part A, Part B, Part D)."
+        },
+        {
+          "info": { "name": "Read a single Coverage resource by id", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/Coverage/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "FHIR logical id of the Coverage resource." }
+            ]
+          },
+          "docs": "Returns a single Coverage resource."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Metadata and UserInfo",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Retrieve the FHIR capability statement", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/metadata"
+          },
+          "docs": "Returns the server CapabilityStatement (FHIR 4.0.1). No authorization required."
+        },
+        {
+          "info": { "name": "Retrieve the authorizing user's profile", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/connect/userinfo"
+          },
+          "docs": "Returns the authorizing beneficiary's OpenID Connect profile (name, family name, email) when openid and profile scopes were granted."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "OAuth 2.0",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Authorize (browser redirect)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/o/authorize/?response_type=code&client_id={{clientId}}&redirect_uri={{redirectUri}}&state={{state}}&code_challenge={{codeChallenge}}&code_challenge_method=S256"
+          },
+          "docs": "Beneficiary-facing authorization endpoint. The user logs in with Medicare.gov credentials and chooses whether to share demographic data. PKCE S256 is mandatory."
+        },
+        {
+          "info": { "name": "Exchange code for token", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.bluebutton.cms.gov/v2/o/token/",
+            "body": {
+              "type": "formUrlEncoded",
+              "data": [
+                { "name": "grant_type", "value": "authorization_code" },
+                { "name": "code", "value": "{{authCode}}" },
+                { "name": "redirect_uri", "value": "{{redirectUri}}" },
+                { "name": "client_id", "value": "{{clientId}}" },
+                { "name": "code_verifier", "value": "{{codeVerifier}}" }
+              ]
+            }
+          },
+          "docs": "Exchanges the authorization code (plus PKCE code_verifier) for a 1-hour access token. Refresh tokens are one-time-use and issued only to approved 13-month and research application types."
+        }
+      ]
+    }
+  ]
+}

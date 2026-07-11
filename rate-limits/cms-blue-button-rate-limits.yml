@@ -1,0 +1,72 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: CMS Blue Button 2.0
+providerId: cms-blue-button
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Blue Button
+- CARIN
+- Medicare
+- FHIR
+- Claims Data
+- Rate Limiting
+- Quotas
+description: >-
+  CMS does not publish fixed numeric request-rate limits for the Blue Button
+  2.0 API. Consumption is naturally bounded by the access model - every access
+  token is scoped to a single beneficiary who authorized the app via
+  Medicare.gov, access tokens expire after one hour, and refresh tokens are
+  one-time-use and only issued to approved 13-month and research application
+  types. Result volume per request is governed by FHIR paging (_count and
+  startIndex) rather than a documented throttle ceiling.
+notes: >-
+  No documented numeric per-app or per-endpoint throttle as of the review
+  date. Apps are expected to poll incrementally using _lastUpdated rather
+  than re-pulling full claim histories, and to page EOB bundles with _count.
+  Verify current behavior against the developer documentation and the
+  Google Group developer forum during reconciliation.
+sources:
+- https://bluebutton.cms.gov/api-documentation/
+- https://bluebutton.cms.gov/api-documentation/authorization/
+- https://sandbox.bluebutton.cms.gov/v2/fhir/metadata
+responseCodes:
+  throttled: 429
+limits:
+- name: API Request Rate
+  scope: application
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for sandbox or production.
+- name: Access Token Lifetime
+  scope: token
+  metric: time
+  limit: 1 hour
+  notes: Access tokens expire after one hour; apps must re-authorize or use a refresh token.
+- name: Refresh Token Use
+  scope: token
+  metric: uses
+  limit: 1 (one-time use)
+  notes: Refresh tokens are single-use and only issued to approved 13-month and research application types; reuse returns invalid_grant.
+- name: Beneficiary Scope
+  scope: token
+  metric: patients
+  limit: 1 per authorization
+  notes: Each token reaches exactly one beneficiary's data; there is no bulk access through Blue Button 2.0.
+- name: Result Page Size
+  scope: request
+  metric: records
+  limit: configurable via _count
+  notes: Bundles are paged with _count and startIndex; large EOB histories should be paged rather than pulled in one request.
+policies:
+- name: Incremental Polling
+  description: Use the _lastUpdated search parameter to fetch only records changed since the previous pull instead of re-reading full claim histories.
+- name: Backoff Strategy
+  description: Implement exponential backoff with jitter and honor Retry-After on 429 or 5xx responses.
+- name: Consent Revocation
+  description: Beneficiaries can revoke an app's access at any time via Medicare.gov; apps must handle invalidated tokens gracefully.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,89 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: CMS Blue Button 2.0
+providerId: cms-blue-button
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Blue Button
+- CARIN
+- Medicare
+- FHIR
+- Claims Data
+- Patient Access
+- Plans
+description: >-
+  Blue Button 2.0 is a free U.S. government API operated by the Centers for
+  Medicare & Medicaid Services. There is no paid tier, no metered billing, and
+  no commercial plan - access is gated by process rather than by price. The
+  sandbox is fully self-serve with synthetic data for 10,000 Medicare
+  enrollees. Production access requires CMS approval of the application - a
+  public privacy policy and terms of service, an application form, and a
+  one-hour demo to the CMS team - after which production credentials are
+  issued at no cost. Refresh tokens (13-month and research application types)
+  are granted as part of that approval.
+notes: >-
+  Every credential is free; the differentiator between tiers is the approval
+  gate and the data reached (synthetic vs real Medicare claims), not price.
+  Each beneficiary must individually authorize an app through Medicare.gov -
+  there is no bulk or population-level access through Blue Button 2.0 (CMS
+  offers separate AB2D/BCDA/DPC APIs for that).
+sources:
+- https://bluebutton.cms.gov/
+- https://bluebutton.cms.gov/production-access/
+- https://bluebutton.cms.gov/terms/
+plans:
+- id: cms-blue-button-sandbox
+  name: Sandbox (Self-Serve)
+  type: free
+  description: >-
+    Open developer sandbox at sandbox.bluebutton.cms.gov. Register an
+    application, get OAuth credentials instantly, and develop against
+    synthetic claims data for 10,000 Medicare enrollees. Mirrors all
+    production endpoints, resource types, and parameters.
+  entries:
+  - label: Sandbox API Requests
+    name: sandbox_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: us
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Synthetic Data for 10,000 Enrollees
+  - name: All Production Endpoints Mirrored
+  - name: Instant OAuth Credentials
+  - name: Test Client and Sample Apps
+- id: cms-blue-button-production
+  name: Production (CMS-Approved)
+  type: free
+  description: >-
+    Free production access to real Medicare beneficiary data, gated on CMS
+    approval - public privacy policy and terms of service, an application
+    form, and a one-hour demo of account creation, authorization, data
+    display, and data-use practices. Each beneficiary still authorizes the
+    app individually via Medicare.gov OAuth consent.
+  entries:
+  - label: Production API Requests
+    name: production_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: us
+    unit: 1
+    price: free (approval-gated, no fee)
+    userMultiplied: false
+  elements:
+  - name: Real Medicare Claims Data (Parts A, B, D)
+  - name: Beneficiary OAuth Consent Flow
+  - name: Refresh Tokens for 13-Month and Research App Types
+  - name: CMS Developer Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

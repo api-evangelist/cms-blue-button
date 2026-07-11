@@ -1,0 +1,132 @@
+aid: cms-blue-button
+url: https://raw.githubusercontent.com/api-evangelist/cms-blue-button/refs/heads/main/apis.yml
+name: CMS Blue Button 2.0
+kind: government
+description: Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CMS)
+  API that lets Medicare beneficiaries share their Parts A, B, and D claims data
+  with applications they trust. It is a FHIR R4 API conforming to the CARIN Blue
+  Button Implementation Guide (CARIN Consumer Directed Payer Data Exchange),
+  serving ExplanationOfBenefit, Patient, and Coverage resources for 60+ million
+  people with Medicare. Access is patient-facing - each beneficiary authorizes an
+  app through an OAuth 2.0 authorization-code flow (with mandatory PKCE) on
+  Medicare.gov, choosing whether to share demographic data. A self-serve sandbox
+  with synthetic enrollee data is open to everyone; production credentials are
+  free but require CMS approval of the application.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Blue Button
+- CARIN
+- Medicare
+- FHIR
+- Claims Data
+- Patient Access
+- Healthcare
+- Government
+created: '2026-07-11'
+modified: '2026-07-11'
+specificationVersion: '0.19'
+apis:
+- aid: cms-blue-button:cms-blue-button-explanation-of-benefit-api
+  name: CMS Blue Button 2.0 Explanation of Benefit API
+  tags:
+  - Claims Data
+  - Explanation of Benefit
+  - CARIN
+  - FHIR
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://bluebutton.cms.gov/api-documentation/calling-the-api/
+  baseURL: https://api.bluebutton.cms.gov/v2/fhir
+  properties:
+  - url: https://bluebutton.cms.gov/api-documentation/
+    type: Documentation
+  - url: https://bluebutton.cms.gov/data/understanding-the-data/
+    type: APIReference
+  - url: openapi/cms-blue-button-openapi.yml
+    type: OpenAPI
+  description: Returns a beneficiary's Medicare Parts A, B, and D claims as FHIR
+    R4 ExplanationOfBenefit resources in a Bundle, conforming to the CARIN Blue
+    Button (CARIN CDPDE) profiles. Supports filtering by patient, claim type
+    (carrier, pde, dme, hha, hospice, inpatient, outpatient, snf), service-date,
+    _lastUpdated, excludeSAMHSA, and paging via _count/startIndex.
+- aid: cms-blue-button:cms-blue-button-patient-api
+  name: CMS Blue Button 2.0 Patient API
+  tags:
+  - Patient
+  - Demographics
+  - FHIR
+  - Patient Access
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://bluebutton.cms.gov/api-documentation/calling-the-api/
+  baseURL: https://api.bluebutton.cms.gov/v2/fhir
+  properties:
+  - url: https://bluebutton.cms.gov/api-documentation/
+    type: Documentation
+  - url: openapi/cms-blue-button-openapi.yml
+    type: OpenAPI
+  description: Returns the authorized beneficiary's demographic and administrative
+    record as a FHIR R4 Patient resource. Beneficiaries can decline to share
+    demographic data during the Medicare.gov authorization flow, in which case
+    apps fall back to identifiers in the Coverage and ExplanationOfBenefit
+    bundles. Supports _id, identifier, _lastUpdated, and paging parameters.
+- aid: cms-blue-button:cms-blue-button-coverage-api
+  name: CMS Blue Button 2.0 Coverage API
+  tags:
+  - Coverage
+  - Medicare
+  - Enrollment
+  - FHIR
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://bluebutton.cms.gov/api-documentation/calling-the-api/
+  baseURL: https://api.bluebutton.cms.gov/v2/fhir
+  properties:
+  - url: https://bluebutton.cms.gov/api-documentation/
+    type: Documentation
+  - url: openapi/cms-blue-button-openapi.yml
+    type: OpenAPI
+  description: Returns a beneficiary's Medicare coverage as FHIR R4 Coverage
+    resources in a Bundle - one resource per coverage type (Part A, Part B,
+    Part D) - searched by beneficiary reference with _lastUpdated, _profile,
+    and paging parameters.
+- aid: cms-blue-button:cms-blue-button-authorization-userinfo-api
+  name: CMS Blue Button 2.0 Authorization and UserInfo API
+  tags:
+  - OAuth
+  - OpenID Connect
+  - Consent
+  - Patient Access
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://bluebutton.cms.gov/api-documentation/authorization/
+  baseURL: https://api.bluebutton.cms.gov/v2
+  properties:
+  - url: https://bluebutton.cms.gov/api-documentation/authorization/
+    type: Documentation
+  - url: openapi/cms-blue-button-openapi.yml
+    type: OpenAPI
+  description: OAuth 2.0 authorization-code flow with mandatory PKCE (S256) that
+    beneficiaries use to grant an app access to their Medicare data via
+    Medicare.gov login, plus the /v2/connect/userinfo endpoint returning the
+    authorized user's OpenID Connect profile. Access tokens last one hour;
+    one-time-use refresh tokens are issued to approved 13-month and research
+    application types.
+common:
+- type: Website
+  url: https://bluebutton.cms.gov
+- type: Documentation
+  url: https://bluebutton.cms.gov/api-documentation/
+- type: GitHubOrganization
+  url: https://github.com/CMSgov
+- type: Sandbox
+  url: https://sandbox.bluebutton.cms.gov
+- type: GettingStarted
+  url: https://bluebutton.cms.gov/production-access/
+- type: TermsOfService
+  url: https://bluebutton.cms.gov/terms/
+- type: Plans
+  url: plans/cms-blue-button-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/cms-blue-button-rate-limits.yml
+- type: FinOps
+  url: finops/cms-blue-button-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,219 @@
+{
+  "info": {
+    "name": "CMS Blue Button 2.0 API",
+    "description": "Medicare claims data for beneficiaries - FHIR R4 (CARIN Blue Button IG) ExplanationOfBenefit, Patient, and Coverage resources, authorized per beneficiary via OAuth 2.0 with PKCE. Production base: https://api.bluebutton.cms.gov/v2 - Sandbox base: https://sandbox.bluebutton.cms.gov/v2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.bluebutton.cms.gov/v2" },
+    { "key": "patientId", "value": "" },
+    { "key": "accessToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "ExplanationOfBenefit",
+      "item": [
+        {
+          "name": "Search a beneficiary's Medicare claims",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/ExplanationOfBenefit?patient={{patientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "ExplanationOfBenefit"],
+              "query": [
+                { "key": "patient", "value": "{{patientId}}", "description": "FHIR logical id of the beneficiary Patient resource." },
+                { "key": "type", "value": "", "description": "Claim type: carrier, pde, dme, hha, hospice, inpatient, outpatient, snf.", "disabled": true },
+                { "key": "service-date", "value": "", "description": "Filter by service date (gt/lt/ge/le prefixes).", "disabled": true },
+                { "key": "_lastUpdated", "value": "", "description": "Filter by last_updated date (gt/lt prefixes).", "disabled": true },
+                { "key": "excludeSAMHSA", "value": "true", "description": "Exclude SAMHSA-related claims.", "disabled": true },
+                { "key": "_count", "value": "10", "description": "Records per page.", "disabled": true },
+                { "key": "startIndex", "value": "0", "description": "Pagination offset.", "disabled": true }
+              ]
+            },
+            "description": "Returns Medicare Parts A, B, and D claims as CARIN Blue Button ExplanationOfBenefit resources in a FHIR Bundle."
+          }
+        },
+        {
+          "name": "Read a single claim by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/ExplanationOfBenefit/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "ExplanationOfBenefit", ":id"],
+              "variable": [
+                { "key": "id", "value": "", "description": "FHIR logical id of the ExplanationOfBenefit." }
+              ]
+            },
+            "description": "Returns a single ExplanationOfBenefit resource."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patient",
+      "item": [
+        {
+          "name": "Search the authorized beneficiary's Patient resource",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/Patient?_id={{patientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "Patient"],
+              "query": [
+                { "key": "_id", "value": "{{patientId}}", "description": "FHIR logical id of the Patient resource." },
+                { "key": "_lastUpdated", "value": "", "description": "Filter by last_updated date (gt/lt prefixes).", "disabled": true }
+              ]
+            },
+            "description": "Returns the beneficiary's demographic record as a Patient resource in a FHIR Bundle. Available only if the beneficiary shared demographic data during authorization."
+          }
+        },
+        {
+          "name": "Read the beneficiary's Patient resource by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/Patient/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "Patient", ":id"],
+              "variable": [
+                { "key": "id", "value": "", "description": "FHIR logical id of the Patient resource." }
+              ]
+            },
+            "description": "Returns the Patient resource for the authorizing beneficiary."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coverage",
+      "item": [
+        {
+          "name": "Search a beneficiary's Medicare coverage",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/Coverage?beneficiary={{patientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "Coverage"],
+              "query": [
+                { "key": "beneficiary", "value": "{{patientId}}", "description": "FHIR logical id of the beneficiary Patient resource." },
+                { "key": "_lastUpdated", "value": "", "description": "Filter by last_updated date (gt/lt prefixes).", "disabled": true },
+                { "key": "_count", "value": "10", "description": "Records per page.", "disabled": true }
+              ]
+            },
+            "description": "Returns Coverage resources in a FHIR Bundle - one per Medicare coverage type (Part A, Part B, Part D)."
+          }
+        },
+        {
+          "name": "Read a single Coverage resource by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/Coverage/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "Coverage", ":id"],
+              "variable": [
+                { "key": "id", "value": "", "description": "FHIR logical id of the Coverage resource." }
+              ]
+            },
+            "description": "Returns a single Coverage resource."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metadata and UserInfo",
+      "item": [
+        {
+          "name": "Retrieve the FHIR capability statement",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fhir/metadata",
+              "host": ["{{baseUrl}}"],
+              "path": ["fhir", "metadata"]
+            },
+            "description": "Returns the server CapabilityStatement (FHIR 4.0.1). No authorization required."
+          }
+        },
+        {
+          "name": "Retrieve the authorizing user's profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/connect/userinfo",
+              "host": ["{{baseUrl}}"],
+              "path": ["connect", "userinfo"]
+            },
+            "description": "Returns the authorizing beneficiary's OpenID Connect profile when openid and profile scopes were granted."
+          }
+        }
+      ]
+    },
+    {
+      "name": "OAuth 2.0",
+      "item": [
+        {
+          "name": "Exchange code for token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "authorization_code" },
+                { "key": "code", "value": "{{authCode}}" },
+                { "key": "redirect_uri", "value": "{{redirectUri}}" },
+                { "key": "client_id", "value": "{{clientId}}" },
+                { "key": "code_verifier", "value": "{{codeVerifier}}" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/o/token/",
+              "host": ["{{baseUrl}}"],
+              "path": ["o", "token", ""]
+            },
+            "description": "Exchanges the authorization code (plus PKCE code_verifier) for a 1-hour access token. The authorize step is a browser redirect to {{baseUrl}}/o/authorize/ with response_type=code, PKCE S256 code_challenge, and a high-entropy state."
+          }
+        }
+      ]
+    }
+  ]
+}
