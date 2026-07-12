@@ -1,0 +1,23 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/cms-blue-button-openapi.yml
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: oauth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.bluebutton.cms.gov/v2/o/authorize/
+    tokenUrl: https://api.bluebutton.cms.gov/v2/o/token/
+    scopes: 6
+  description: OAuth 2.0 authorization-code flow with mandatory PKCE (S256 only). Beneficiaries
+    log in with their Medicare.gov credentials and choose whether to share demographic data.
+    Access tokens expire after 1 hour. One-time-use refresh tokens are issued only to approved
+    13-month and research application types. Sandbox uses https://sandbox.bluebutton.cms.gov/v2/o/authorize/
+    and https://sandbox.bluebutton.cms
+  sources:
+  - openapi/cms-blue-button-openapi.yml

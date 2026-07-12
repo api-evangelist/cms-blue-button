@@ -109,6 +109,10 @@ apis:
     one-time-use refresh tokens are issued to approved 13-month and research
     application types.
 common:
+- type: DomainSecurity
+  url: security/cms-blue-button-domain-security.yml
+- type: Authentication
+  url: authentication/cms-blue-button-authentication.yml
 - type: Website
   url: https://bluebutton.cms.gov
 - type: Documentation
