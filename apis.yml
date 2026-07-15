@@ -109,6 +109,8 @@ apis:
     one-time-use refresh tokens are issued to approved 13-month and research
     application types.
 common:
+- type: AgenticAccess
+  url: agentic-access/cms-blue-button-agentic-access.yml
 - type: DomainSecurity
   url: security/cms-blue-button-domain-security.yml
 - type: Authentication
