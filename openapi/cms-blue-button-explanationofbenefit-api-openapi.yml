@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: CMS Blue Button 2.0 Coverage ExplanationOfBenefit API
+  description: Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CMS) patient-facing API that lets Medicare beneficiaries share their Parts A, B, and D claims data with applications they authorize. The v2 API is FHIR R4 (4.0.1) and conforms to the CARIN Blue Button Implementation Guide (CARIN Consumer Directed Payer Data Exchange, CDPDE). It exposes three FHIR resource types - ExplanationOfBenefit (claims), Patient (demographics), and Coverage (Part A/B/D enrollment) - plus a capability statement and an OpenID Connect userinfo endpoint. Every request is scoped to the single beneficiary who authorized the application through the OAuth 2.0 authorization-code flow (PKCE S256 required) on Medicare.gov. The sandbox at sandbox.bluebutton.cms.gov mirrors production with synthetic data for 10,000 enrollees.
+  version: '2.0'
+  contact:
+    name: CMS Blue Button 2.0
+    url: https://bluebutton.cms.gov
+  termsOfService: https://bluebutton.cms.gov/terms/
+servers:
+- url: https://api.bluebutton.cms.gov/v2/fhir
+  description: Production (approved applications only)
+- url: https://sandbox.bluebutton.cms.gov/v2/fhir
+  description: Sandbox (synthetic Medicare enrollee data, self-serve)
+security:
+- oauth2:
+  - patient/ExplanationOfBenefit.read
+  - patient/Patient.read
+  - patient/Coverage.read
+tags:
+- name: ExplanationOfBenefit
+  description: Medicare Parts A, B, and D claims as CARIN Blue Button EOB profiles.
+paths:
+  /ExplanationOfBenefit:
+    get:
+      operationId: searchExplanationOfBenefit
+      tags:
+      - ExplanationOfBenefit
+      summary: Search a beneficiary's Medicare claims
+      description: Returns the authorized beneficiary's Medicare Parts A, B, and D claims as ExplanationOfBenefit resources inside a FHIR Bundle, conforming to the CARIN Blue Button profiles.
+      parameters:
+      - name: patient
+        in: query
+        description: The FHIR logical id of the beneficiary Patient resource.
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Claim type filter - one or more of carrier, pde, dme, hha, hospice, inpatient, outpatient, snf.
+        schema:
+          type: string
+      - name: service-date
+        in: query
+        description: Filter claims by service date range using gt/lt/ge/le prefixes.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/lastUpdated'
+      - name: excludeSAMHSA
+        in: query
+        description: When true, excludes claims related to substance abuse and mental health services (SAMHSA).
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - name: includeTaxNumbers
+        in: query
+        description: When true, includes provider tax numbers in the response.
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/startIndex'
+      responses:
+        '200':
+          description: A FHIR Bundle of ExplanationOfBenefit resources.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /ExplanationOfBenefit/{id}:
+    get:
+      operationId: readExplanationOfBenefit
+      tags:
+      - ExplanationOfBenefit
+      summary: Read a single claim by id
+      description: Returns a single ExplanationOfBenefit resource by FHIR logical id.
+      parameters:
+      - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          description: An ExplanationOfBenefit resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/ExplanationOfBenefit'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    ExplanationOfBenefit:
+      type: object
+      description: FHIR R4 ExplanationOfBenefit conforming to the CARIN Blue Button profiles - one of carrier, pde (Part D drug event), dme, hha, hospice, inpatient, outpatient, or snf claim types.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - ExplanationOfBenefit
+        id:
+          type: string
+        type:
+          type: object
+        patient:
+          type: object
+        billablePeriod:
+          type: object
+        insurance:
+          type: array
+          items:
+            type: object
+        item:
+          type: array
+          items:
+            type: object
+        total:
+          type: array
+          items:
+            type: object
+    Bundle:
+      type: object
+      description: A FHIR R4 searchset Bundle wrapping matching resources.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+              url:
+                type: string
+        entry:
+          type: array
+          items:
+            type: object
+            properties:
+              resource:
+                type: object
+  responses:
+    Unauthorized:
+      description: Missing, expired, or invalid OAuth 2.0 access token.
+    NotFound:
+      description: No resource exists with the supplied id for this beneficiary.
+  parameters:
+    startIndex:
+      name: startIndex
+      in: query
+      description: Zero-based index of the first record to return for pagination.
+      schema:
+        type: integer
+    count:
+      name: _count
+      in: query
+      description: Number of records per page for pagination.
+      schema:
+        type: integer
+    lastUpdated:
+      name: _lastUpdated
+      in: query
+      description: Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range.
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      description: The FHIR logical id of the resource.
+      schema:
+        type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 authorization-code flow with mandatory PKCE (S256 only). Beneficiaries log in with their Medicare.gov credentials and choose whether to share demographic data. Access tokens expire after 1 hour. One-time-use refresh tokens are issued only to approved 13-month and research application types. Sandbox uses https://sandbox.bluebutton.cms.gov/v2/o/authorize/ and https://sandbox.bluebutton.cms.gov/v2/o/token/.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.bluebutton.cms.gov/v2/o/authorize/
+          tokenUrl: https://api.bluebutton.cms.gov/v2/o/token/
+          refreshUrl: https://api.bluebutton.cms.gov/v2/o/token/
+          scopes:
+            patient/Patient.read: Read the beneficiary's Patient demographic resource.
+            patient/ExplanationOfBenefit.read: Read the beneficiary's Medicare claims.
+            patient/Coverage.read: Read the beneficiary's Medicare coverage.
+            openid: OpenID Connect authentication.
+            profile: Access the userinfo profile endpoint.
+            launch/patient: Receive the patient FHIR id in the token response.
