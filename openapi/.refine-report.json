@@ -1,0 +1,22 @@
+{
+  "provider": "cms-blue-button",
+  "sources": [
+    "cms-blue-button-coverage-api-openapi.yml",
+    "cms-blue-button-explanationofbenefit-api-openapi.yml",
+    "cms-blue-button-metadata-api-openapi.yml",
+    "cms-blue-button-patient-api-openapi.yml",
+    "cms-blue-button-userinfo-api-openapi.yml"
+  ],
+  "outputs": [
+    "cms-blue-button-coverage-api-openapi.yml",
+    "cms-blue-button-explanationofbenefit-api-openapi.yml",
+    "cms-blue-button-metadata-api-openapi.yml",
+    "cms-blue-button-patient-api-openapi.yml",
+    "cms-blue-button-userinfo-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
