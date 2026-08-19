@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CMS Blue Button 2.0 Coverage ExplanationOfBenefit API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://api.bluebutton.cms.gov/v2/o/authorize/",
+      "accessTokenUrl": "https://api.bluebutton.cms.gov/v2/o/token/",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ExplanationOfBenefit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search a beneficiary's Medicare claims",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "The FHIR logical id of the beneficiary Patient resource."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Claim type filter - one or more of carrier, pde, dme, hha, hospice, inpatient, outpatient, snf."
+              },
+              {
+                "name": "service-date",
+                "value": "",
+                "type": "query",
+                "description": "Filter claims by service date range using gt/lt/ge/le prefixes."
+              },
+              {
+                "name": "_lastUpdated",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range."
+              },
+              {
+                "name": "excludeSAMHSA",
+                "value": "",
+                "type": "query",
+                "description": "When true, excludes claims related to substance abuse and mental health services (SAMHSA)."
+              },
+              {
+                "name": "includeTaxNumbers",
+                "value": "",
+                "type": "query",
+                "description": "When true, includes provider tax numbers in the response."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Number of records per page for pagination."
+              },
+              {
+                "name": "startIndex",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the first record to return for pagination."
+              }
+            ]
+          },
+          "docs": "Returns the authorized beneficiary's Medicare Parts A, B, and D claims as ExplanationOfBenefit resources inside a FHIR Bundle, conforming to the CARIN Blue Button profiles."
+        },
+        {
+          "info": {
+            "name": "Read a single claim by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR logical id of the resource."
+              }
+            ]
+          },
+          "docs": "Returns a single ExplanationOfBenefit resource by FHIR logical id."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

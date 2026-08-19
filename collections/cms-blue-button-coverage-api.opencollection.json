@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CMS Blue Button 2.0 Coverage API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://api.bluebutton.cms.gov/v2/o/authorize/",
+      "accessTokenUrl": "https://api.bluebutton.cms.gov/v2/o/token/",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Coverage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search a beneficiary's Medicare coverage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/Coverage",
+            "params": [
+              {
+                "name": "beneficiary",
+                "value": "",
+                "type": "query",
+                "description": "The FHIR logical id of the beneficiary Patient resource."
+              },
+              {
+                "name": "_profile",
+                "value": "",
+                "type": "query",
+                "description": "Filter the response to a specific CARIN Coverage profile."
+              },
+              {
+                "name": "_lastUpdated",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Number of records per page for pagination."
+              },
+              {
+                "name": "startIndex",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the first record to return for pagination."
+              }
+            ]
+          },
+          "docs": "Returns Coverage resources inside a FHIR Bundle - one Coverage resource per coverage type (Medicare Part A, Part B, Part D)."
+        },
+        {
+          "info": {
+            "name": "Read a single Coverage resource by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.bluebutton.cms.gov/v2/fhir/Coverage/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR logical id of the resource."
+              }
+            ]
+          },
+          "docs": "Returns a single Coverage resource by FHIR logical id."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

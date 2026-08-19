@@ -1,0 +1,182 @@
+{
+  "item": [
+    {
+      "id": "a2ae5196-fc48-40b5-a2da-184821685da3",
+      "name": "UserInfo",
+      "description": {
+        "content": "OpenID Connect userinfo for the authorizing beneficiary.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2b4544a7-75fb-4b9b-80d9-164af8a6b717",
+          "name": "Retrieve the authorizing user's OpenID Connect profile",
+          "request": {
+            "name": "Retrieve the authorizing user's OpenID Connect profile",
+            "description": {
+              "content": "Full path is /v2/connect/userinfo (outside the /fhir base). Returns the authorizing beneficiary's user profile (name, family name, email) when the openid and profile scopes were granted.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "connect",
+                "userinfo"
+              ],
+              "host": [
+                "{{connect-userinfo-Url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cde4b278-3cc4-4172-871d-0c607c1e882c",
+              "name": "OpenID Connect userinfo JSON.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "connect",
+                    "userinfo"
+                  ],
+                  "host": [
+                    "{{connect-userinfo-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"sub\": \"string\",\n  \"name\": \"string\",\n  \"given_name\": \"string\",\n  \"family_name\": \"string\",\n  \"email\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49b822e5-f9ff-4397-937a-785ad93deb48",
+              "name": "Missing, expired, or invalid OAuth 2.0 access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "connect",
+                    "userinfo"
+                  ],
+                  "host": [
+                    "{{connect-userinfo-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.bluebutton.cms.gov/v2/fhir",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://api.bluebutton.cms.gov/v2",
+      "key": "connect-userinfo-Url"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "patient/Patient.read patient/ExplanationOfBenefit.read patient/Coverage.read openid profile launch/patient"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://api.bluebutton.cms.gov/v2/o/token/"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://api.bluebutton.cms.gov/v2/o/token/"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://api.bluebutton.cms.gov/v2/o/authorize/"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "271d9656-660c-4151-b2bc-d2b2a49c4955",
+    "name": "CMS Blue Button 2.0 Coverage UserInfo API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CMS) patient-facing API that lets Medicare beneficiaries share their Parts A, B, and D claims data with applications they authorize. The v2 API is FHIR R4 (4.0.1) and conforms to the CARIN Blue Button Implementation Guide (CARIN Consumer Directed Payer Data Exchange, CDPDE). It exposes three FHIR resource types - ExplanationOfBenefit (claims), Patient (demographics), and Coverage (Part A/B/D enrollment) - plus a capability statement and an OpenID Connect userinfo endpoint. Every request is scoped to the single beneficiary who authorized the application through the OAuth 2.0 authorization-code flow (PKCE S256 required) on Medicare.gov. The sandbox at sandbox.bluebutton.cms.gov mirrors production with synthetic data for 10,000 enrollees.\n\nContact Support:\n Name: CMS Blue Button 2.0",
+      "type": "text/plain"
+    }
+  }
+}
