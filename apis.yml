@@ -12,6 +12,18 @@ description: Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CM
   Medicare.gov, choosing whether to share demographic data. A self-serve sandbox
   with synthetic enrollee data is open to everyone; production credentials are
   free but require CMS approval of the application.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
