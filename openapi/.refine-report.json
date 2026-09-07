@@ -17,6 +17,13 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
+  "notes": [
+    "cms-blue-button-coverage-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cms-blue-button-explanationofbenefit-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cms-blue-button-metadata-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cms-blue-button-patient-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cms-blue-button-userinfo-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
   "skipped": []
 }
