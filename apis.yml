@@ -115,16 +115,16 @@ apis:
     url: https://bluebutton.cms.gov/data/understanding-the-data/
   - type: Documentation
     url: https://bluebutton.cms.gov/api-documentation/authorization/
-- aid: cms-blue-button:cms-blue-button-userinfo-api
-  name: CMS Blue Button 2.0 UserInfo API
+- aid: cms-blue-button:cms-blue-button-user-info-api
+  name: CMS Blue Button 2.0 User Info API
   description: OpenID Connect userinfo for the authorizing beneficiary.
   humanURL: https://bluebutton.cms.gov/api-documentation/calling-the-api/
   baseURL: https://api.bluebutton.cms.gov/v2/fhir
   tags:
-  - UserInfo
+  - User Info
   properties:
   - type: OpenAPI
-    url: openapi/cms-blue-button-userinfo-api-openapi.yml
+    url: openapi/cms-blue-button-user-info-api-openapi.yml
   - type: Documentation
     url: https://bluebutton.cms.gov/api-documentation/
   - type: APIReference
