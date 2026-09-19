@@ -105,6 +105,8 @@ apis:
   humanURL: https://bluebutton.cms.gov/api-documentation/calling-the-api/
   baseURL: https://api.bluebutton.cms.gov/v2/fhir
   tags:
+  - Patients
+  tags_raw:
   - Patient
   properties:
   - type: OpenAPI
@@ -121,6 +123,8 @@ apis:
   humanURL: https://bluebutton.cms.gov/api-documentation/calling-the-api/
   baseURL: https://api.bluebutton.cms.gov/v2/fhir
   tags:
+  - UserInfo
+  tags_raw:
   - User Info
   properties:
   - type: OpenAPI
