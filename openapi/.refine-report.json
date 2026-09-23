@@ -1,11 +1,7 @@
 {
   "provider": "cms-blue-button",
   "sources": [
-    "cms-blue-button-coverage-api-openapi.yml",
-    "cms-blue-button-explanationofbenefit-api-openapi.yml",
-    "cms-blue-button-metadata-api-openapi.yml",
-    "cms-blue-button-patient-api-openapi.yml",
-    "cms-blue-button-userinfo-api-openapi.yml"
+    "_original/cms-blue-button-openapi.yml"
   ],
   "outputs": [
     "cms-blue-button-coverage-api-openapi.yml",
@@ -14,16 +10,22 @@
     "cms-blue-button-patient-api-openapi.yml",
     "cms-blue-button-userinfo-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
-    "cms-blue-button-coverage-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "cms-blue-button-explanationofbenefit-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "cms-blue-button-metadata-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "cms-blue-button-patient-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "cms-blue-button-userinfo-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "cms-blue-button-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "superseded outputs removed: cms-blue-button-user-info-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 5 total)"
   ],
-  "skipped": []
+  "skipped": [
+    "cms-blue-button-coverage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-blue-button-explanationofbenefit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-blue-button-metadata-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-blue-button-patient-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-blue-button-user-info-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
