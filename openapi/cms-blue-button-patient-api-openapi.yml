@@ -73,16 +73,16 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   parameters:
-    count:
-      name: _count
-      in: query
-      description: Number of records per page for pagination.
-      schema:
-        type: integer
     startIndex:
       name: startIndex
       in: query
       description: Zero-based index of the first record to return for pagination.
+      schema:
+        type: integer
+    count:
+      name: _count
+      in: query
+      description: Number of records per page for pagination.
       schema:
         type: integer
     resourceId:
@@ -98,7 +98,36 @@ components:
       description: Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range.
       schema:
         type: string
+  responses:
+    NotFound:
+      description: No resource exists with the supplied id for this beneficiary.
+    Unauthorized:
+      description: Missing, expired, or invalid OAuth 2.0 access token.
   schemas:
+    Patient:
+      type: object
+      description: FHIR R4 Patient resource for the authorizing Medicare beneficiary.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - Patient
+        id:
+          type: string
+        identifier:
+          type: array
+          items:
+            type: object
+        name:
+          type: array
+          items:
+            type: object
+        birthDate:
+          type: string
+        address:
+          type: array
+          items:
+            type: object
     Bundle:
       type: object
       description: A FHIR R4 searchset Bundle wrapping matching resources.
@@ -127,35 +156,6 @@ components:
             properties:
               resource:
                 type: object
-    Patient:
-      type: object
-      description: FHIR R4 Patient resource for the authorizing Medicare beneficiary.
-      properties:
-        resourceType:
-          type: string
-          enum:
-          - Patient
-        id:
-          type: string
-        identifier:
-          type: array
-          items:
-            type: object
-        name:
-          type: array
-          items:
-            type: object
-        birthDate:
-          type: string
-        address:
-          type: array
-          items:
-            type: object
-  responses:
-    NotFound:
-      description: No resource exists with the supplied id for this beneficiary.
-    Unauthorized:
-      description: Missing, expired, or invalid OAuth 2.0 access token.
   securitySchemes:
     oauth2:
       type: oauth2
