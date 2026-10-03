@@ -73,12 +73,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   parameters:
-    startIndex:
-      name: startIndex
-      in: query
-      description: Zero-based index of the first record to return for pagination.
-      schema:
-        type: integer
     count:
       name: _count
       in: query
@@ -92,6 +86,12 @@ components:
       description: The FHIR logical id of the resource.
       schema:
         type: string
+    startIndex:
+      name: startIndex
+      in: query
+      description: Zero-based index of the first record to return for pagination.
+      schema:
+        type: integer
     lastUpdated:
       name: _lastUpdated
       in: query
@@ -99,35 +99,11 @@ components:
       schema:
         type: string
   responses:
-    NotFound:
-      description: No resource exists with the supplied id for this beneficiary.
     Unauthorized:
       description: Missing, expired, or invalid OAuth 2.0 access token.
+    NotFound:
+      description: No resource exists with the supplied id for this beneficiary.
   schemas:
-    Patient:
-      type: object
-      description: FHIR R4 Patient resource for the authorizing Medicare beneficiary.
-      properties:
-        resourceType:
-          type: string
-          enum:
-          - Patient
-        id:
-          type: string
-        identifier:
-          type: array
-          items:
-            type: object
-        name:
-          type: array
-          items:
-            type: object
-        birthDate:
-          type: string
-        address:
-          type: array
-          items:
-            type: object
     Bundle:
       type: object
       description: A FHIR R4 searchset Bundle wrapping matching resources.
@@ -156,6 +132,30 @@ components:
             properties:
               resource:
                 type: object
+    Patient:
+      type: object
+      description: FHIR R4 Patient resource for the authorizing Medicare beneficiary.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - Patient
+        id:
+          type: string
+        identifier:
+          type: array
+          items:
+            type: object
+        name:
+          type: array
+          items:
+            type: object
+        birthDate:
+          type: string
+        address:
+          type: array
+          items:
+            type: object
   securitySchemes:
     oauth2:
       type: oauth2

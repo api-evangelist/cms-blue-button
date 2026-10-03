@@ -72,25 +72,38 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    count:
+      name: _count
+      in: query
+      description: Number of records per page for pagination.
+      schema:
+        type: integer
+    resourceId:
+      name: id
+      in: path
+      required: true
+      description: The FHIR logical id of the resource.
+      schema:
+        type: string
+    startIndex:
+      name: startIndex
+      in: query
+      description: Zero-based index of the first record to return for pagination.
+      schema:
+        type: integer
+    lastUpdated:
+      name: _lastUpdated
+      in: query
+      description: Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing, expired, or invalid OAuth 2.0 access token.
+    NotFound:
+      description: No resource exists with the supplied id for this beneficiary.
   schemas:
-    Coverage:
-      type: object
-      description: FHIR R4 Coverage resource - one per Medicare coverage type (Part A, Part B, Part D).
-      properties:
-        resourceType:
-          type: string
-          enum:
-          - Coverage
-        id:
-          type: string
-        status:
-          type: string
-        beneficiary:
-          type: object
-        class:
-          type: array
-          items:
-            type: object
     Bundle:
       type: object
       description: A FHIR R4 searchset Bundle wrapping matching resources.
@@ -119,37 +132,24 @@ components:
             properties:
               resource:
                 type: object
-  parameters:
-    startIndex:
-      name: startIndex
-      in: query
-      description: Zero-based index of the first record to return for pagination.
-      schema:
-        type: integer
-    count:
-      name: _count
-      in: query
-      description: Number of records per page for pagination.
-      schema:
-        type: integer
-    resourceId:
-      name: id
-      in: path
-      required: true
-      description: The FHIR logical id of the resource.
-      schema:
-        type: string
-    lastUpdated:
-      name: _lastUpdated
-      in: query
-      description: Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range.
-      schema:
-        type: string
-  responses:
-    NotFound:
-      description: No resource exists with the supplied id for this beneficiary.
-    Unauthorized:
-      description: Missing, expired, or invalid OAuth 2.0 access token.
+    Coverage:
+      type: object
+      description: FHIR R4 Coverage resource - one per Medicare coverage type (Part A, Part B, Part D).
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - Coverage
+        id:
+          type: string
+        status:
+          type: string
+        beneficiary:
+          type: object
+        class:
+          type: array
+          items:
+            type: object
   securitySchemes:
     oauth2:
       type: oauth2
