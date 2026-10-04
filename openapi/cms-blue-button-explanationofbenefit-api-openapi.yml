@@ -93,35 +93,12 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: No resource exists with the supplied id for this beneficiary.
+    Unauthorized:
+      description: Missing, expired, or invalid OAuth 2.0 access token.
   schemas:
-    ExplanationOfBenefit:
-      type: object
-      description: FHIR R4 ExplanationOfBenefit conforming to the CARIN Blue Button profiles - one of carrier, pde (Part D drug event), dme, hha, hospice, inpatient, outpatient, or snf claim types.
-      properties:
-        resourceType:
-          type: string
-          enum:
-          - ExplanationOfBenefit
-        id:
-          type: string
-        type:
-          type: object
-        patient:
-          type: object
-        billablePeriod:
-          type: object
-        insurance:
-          type: array
-          items:
-            type: object
-        item:
-          type: array
-          items:
-            type: object
-        total:
-          type: array
-          items:
-            type: object
     Bundle:
       type: object
       description: A FHIR R4 searchset Bundle wrapping matching resources.
@@ -150,7 +127,47 @@ components:
             properties:
               resource:
                 type: object
+    ExplanationOfBenefit:
+      type: object
+      description: FHIR R4 ExplanationOfBenefit conforming to the CARIN Blue Button profiles - one of carrier, pde (Part D drug event), dme, hha, hospice, inpatient, outpatient, or snf claim types.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - ExplanationOfBenefit
+        id:
+          type: string
+        type:
+          type: object
+        patient:
+          type: object
+        billablePeriod:
+          type: object
+        insurance:
+          type: array
+          items:
+            type: object
+        item:
+          type: array
+          items:
+            type: object
+        total:
+          type: array
+          items:
+            type: object
   parameters:
+    startIndex:
+      name: startIndex
+      in: query
+      description: Zero-based index of the first record to return for pagination.
+      schema:
+        type: integer
+    lastUpdated:
+      name: _lastUpdated
+      in: query
+      description: Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range.
+      schema:
+        type: string
     count:
       name: _count
       in: query
@@ -164,23 +181,6 @@ components:
       description: The FHIR logical id of the resource.
       schema:
         type: string
-    startIndex:
-      name: startIndex
-      in: query
-      description: Zero-based index of the first record to return for pagination.
-      schema:
-        type: integer
-    lastUpdated:
-      name: _lastUpdated
-      in: query
-      description: Filter by the record's last_updated date using gt/lt prefixes; may be supplied more than once to define a range.
-      schema:
-        type: string
-  responses:
-    Unauthorized:
-      description: Missing, expired, or invalid OAuth 2.0 access token.
-    NotFound:
-      description: No resource exists with the supplied id for this beneficiary.
   securitySchemes:
     oauth2:
       type: oauth2
