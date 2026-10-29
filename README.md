@@ -1,4 +1,4 @@
-# CMS Blue Button 2.0 (cms-blue-button)
+# CMS Blue Button 2.0
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,128 +64,127 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CMS) API that lets Medicare beneficiaries share their Parts A, B, and D claims data with applications they trust. It is a FHIR R4 (4.0.1) API conforming to the CARIN Blue Button Implementation Guide (CARIN Consumer Directed Payer Data Exchange), serving ExplanationOfBenefit, Patient, and Coverage resources for 60+ million people with Medicare.
+Blue Button 2.0 is the Centers for Medicare & Medicaid Services (CMS) API that lets Medicare beneficiaries share their Parts A, B, and D claims data with applications they trust. It is a FHIR R4 API conforming to the CARIN Blue Button Implementation Guide (CARIN Consumer Directed Payer Data Exchange), serving ExplanationOfBenefit, Patient, and Coverage resources for 60+ million people with Medicare. Access is patient-facing - each beneficiary authorizes an app through an OAuth 2.0 authorization-code flow (with mandatory PKCE) on Medicare.gov, choosing whether to share demographic data. A self-serve sandbox with synthetic enrollee data is open to everyone; production credentials are free but require CMS approval of the application.
 
-The access model is patient-facing and consent-driven: there is no way to bulk-query beneficiaries. Each Medicare enrollee authorizes an application individually through an OAuth 2.0 authorization-code flow (PKCE S256 is mandatory) using their Medicare.gov login, and can decline to share demographic data during that flow. The API is free at every stage. The sandbox at `sandbox.bluebutton.cms.gov` is fully self-serve, mirrors production endpoints, and ships synthetic data for 10,000 Medicare enrollees. Production access is approval-gated - you draft a public privacy policy and terms of service, apply, and demo your application to the CMS team (a one-hour walkthrough of account creation, authorization, data display, and data-use practices) before production credentials are issued. Access tokens last one hour; one-time-use refresh tokens are only issued to approved 13-month and research application types.
+**Areas:** Blue Button · CARIN · Medicare · FHIR · Claims Data · Patient Access · Healthcare · Government
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/cms-blue-button/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/cms-blue-button/refs/heads/main/apis.yml)
+## CMS Blue Button 2.0 on APIs.io
 
-## Tags
+Everything profiled for CMS Blue Button 2.0 is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cms-blue-button/](https://apis.io/providers/cms-blue-button/)** — or go straight to one of the APIs or properties below.
 
-- Blue Button
-- CARIN
-- Medicare
-- FHIR
-- Claims Data
-- Patient Access
-- Healthcare
-- Government
+### APIs (5)
 
-## Timestamps
+- [CMS Blue Button 2.0 Coverage API](https://apis.io/apis/cms-blue-button/cms-blue-button-coverage-api/) — Medicare coverage resources, one per coverage type.
+- [CMS Blue Button 2.0 ExplanationOfBenefit API](https://apis.io/apis/cms-blue-button/cms-blue-button-explanationofbenefit-api/) — Medicare Parts A, B, and D claims as CARIN Blue Button EOB profiles.
+- [CMS Blue Button 2.0 Metadata API](https://apis.io/apis/cms-blue-button/cms-blue-button-metadata-api/) — FHIR capability statement.
+- [CMS Blue Button 2.0 Patient API](https://apis.io/apis/cms-blue-button/cms-blue-button-patient-api/) — Beneficiary demographic and administrative data.
+- [CMS Blue Button 2.0 User Info API](https://apis.io/apis/cms-blue-button/cms-blue-button-user-info-api/) — OpenID Connect userinfo for the authorizing beneficiary.
 
-- **Created:** 2026-07-11
-- **Modified:** 2026-07-11
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### CMS Blue Button 2.0 Explanation of Benefit API
+#### Agentic access (1)
 
-Returns a beneficiary's Medicare Parts A, B, and D claims as FHIR R4 ExplanationOfBenefit resources in a Bundle, conforming to the CARIN Blue Button (CARIN CDPDE) profiles. Supports filtering by patient, claim type (carrier, pde, dme, hha, hospice, inpatient, outpatient, snf), service-date, `_lastUpdated`, `excludeSAMHSA`, and paging via `_count`/`startIndex`.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://bluebutton.cms.gov/api-documentation/calling-the-api/](https://bluebutton.cms.gov/api-documentation/calling-the-api/)
-- **Base URL:** `https://api.bluebutton.cms.gov/v2/fhir`
+- [Cms Blue Button Agentic Access](https://apis.io/agentic-access/cms-blue-button/cms-blue-button-agentic-access/)
 
-#### Tags
+#### Collections (6)
 
-- Claims Data
-- Explanation of Benefit
-- CARIN
-- FHIR
+Postman and Open Collection request collections.
 
-#### Properties
+- [CMS Blue Button 2.0 API](https://apis.io/collections/cms-blue-button/open-cms-blue-button/)
+- [CMS Blue Button 2.0 Coverage API](https://apis.io/collections/cms-blue-button/open-cms-blue-button-coverage-api/)
+- [CMS Blue Button 2.0 Coverage ExplanationOfBenefit API](https://apis.io/collections/cms-blue-button/open-cms-blue-button-explanationofbenefit-api/)
+- [CMS Blue Button 2.0 Coverage Metadata API](https://apis.io/collections/cms-blue-button/open-cms-blue-button-metadata-api/)
+- [CMS Blue Button 2.0 Coverage Patient API](https://apis.io/collections/cms-blue-button/open-cms-blue-button-patient-api/)
+- [CMS Blue Button 2.0 Coverage UserInfo API](https://apis.io/collections/cms-blue-button/open-cms-blue-button-userinfo-api/)
 
-- [Documentation](https://bluebutton.cms.gov/api-documentation/)
-- [API Reference](https://bluebutton.cms.gov/data/understanding-the-data/)
-- [OpenAPI](openapi/cms-blue-button-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cms-blue-button.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cms-blue-button.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Security (2)
 
-### CMS Blue Button 2.0 Patient API
+Authentication, trust centre, and vulnerability disclosure.
 
-Returns the authorized beneficiary's demographic and administrative record as a FHIR R4 Patient resource. Beneficiaries can decline to share demographic data during the Medicare.gov authorization flow, in which case apps fall back to identifiers in the Coverage and ExplanationOfBenefit bundles.
+- [Cms Blue Button Authentication](https://apis.io/security/cms-blue-button/cms-blue-button-authentication/)
+- [Cms Blue Button Domain Security](https://apis.io/security/cms-blue-button/cms-blue-button-domain-security/)
 
-- **Human URL:** [https://bluebutton.cms.gov/api-documentation/calling-the-api/](https://bluebutton.cms.gov/api-documentation/calling-the-api/)
-- **Base URL:** `https://api.bluebutton.cms.gov/v2/fhir`
+#### Plans and pricing (1)
 
-#### Tags
+Published plans, tiers and prices.
 
-- Patient
-- Demographics
-- FHIR
-- Patient Access
+- [Cms Blue Button Plans Pricing](https://apis.io/plans/cms-blue-button/cms-blue-button-plans-pricing/)
 
-#### Properties
+#### Rate limits (1)
 
-- [Documentation](https://bluebutton.cms.gov/api-documentation/)
-- [OpenAPI](openapi/cms-blue-button-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cms-blue-button.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cms-blue-button.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Published request limits.
 
-### CMS Blue Button 2.0 Coverage API
+- [Cms Blue Button Rate Limits](https://apis.io/rate-limits/cms-blue-button/cms-blue-button-rate-limits/)
 
-Returns a beneficiary's Medicare coverage as FHIR R4 Coverage resources in a Bundle - one resource per coverage type (Part A, Part B, Part D) - searched by beneficiary reference with `_lastUpdated`, `_profile`, and paging parameters.
+#### FinOps (1)
 
-- **Human URL:** [https://bluebutton.cms.gov/api-documentation/calling-the-api/](https://bluebutton.cms.gov/api-documentation/calling-the-api/)
-- **Base URL:** `https://api.bluebutton.cms.gov/v2/fhir`
+What the API costs to run, by operation.
 
-#### Tags
+- [Cms Blue Button Finops](https://apis.io/finops/cms-blue-button/cms-blue-button-finops/)
 
-- Coverage
-- Medicare
-- Enrollment
-- FHIR
+## Where to find this API
 
-#### Properties
-
-- [Documentation](https://bluebutton.cms.gov/api-documentation/)
-- [OpenAPI](openapi/cms-blue-button-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cms-blue-button.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cms-blue-button.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### CMS Blue Button 2.0 Authorization and UserInfo API
-
-OAuth 2.0 authorization-code flow with mandatory PKCE (S256) that beneficiaries use to grant an app access to their Medicare data via Medicare.gov login, plus the `/v2/connect/userinfo` endpoint returning the authorized user's OpenID Connect profile. Access tokens last one hour; one-time-use refresh tokens are issued to approved 13-month and research application types.
-
-- **Human URL:** [https://bluebutton.cms.gov/api-documentation/authorization/](https://bluebutton.cms.gov/api-documentation/authorization/)
-- **Base URL:** `https://api.bluebutton.cms.gov/v2`
-
-#### Tags
-
-- OAuth
-- OpenID Connect
-- Consent
-- Patient Access
-
-#### Properties
-
-- [Documentation](https://bluebutton.cms.gov/api-documentation/authorization/)
-- [OpenAPI](openapi/cms-blue-button-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/cms-blue-button.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cms-blue-button.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://bluebutton.cms.gov)
 - [Documentation](https://bluebutton.cms.gov/api-documentation/)
-- [GitHub Organization](https://github.com/CMSgov)
-- [Sandbox](https://sandbox.bluebutton.cms.gov)
-- [Getting Started / Production Access](https://bluebutton.cms.gov/production-access/)
-- [Terms of Service](https://bluebutton.cms.gov/terms/)
-- [Plans](plans/cms-blue-button-plans-pricing.yml)
-- [Rate Limits](rate-limits/cms-blue-button-rate-limits.yml)
-- [Fin Ops](finops/cms-blue-button-finops.yml)
+- [Getting started](https://bluebutton.cms.gov/production-access/)
+- [Terms of service](https://bluebutton.cms.gov/terms/)
+- [GitHub](https://github.com/CMSgov)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 33.1** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 49.7 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 47.6 |
+| Access clarity | 15.8 |
+
+**Agent readiness 26.6** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | na |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | documented (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 12.5** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cms-blue-button/](https://apis.io/providers/cms-blue-button/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for CMS Blue Button 2.0: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cms-blue-button/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
